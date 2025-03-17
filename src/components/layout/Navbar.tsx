@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Bell, Menu, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -20,6 +21,34 @@ interface NavbarProps {
 
 const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
   const [showSearch, setShowSearch] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleProfileAction = (action: string) => {
+    switch(action) {
+      case 'profile':
+        toast({
+          title: "Profile",
+          description: "Profile page will be available soon",
+        });
+        break;
+      case 'settings':
+        toast({
+          title: "Settings",
+          description: "Settings page will be available soon",
+        });
+        break;
+      case 'logout':
+        toast({
+          title: "Logged out",
+          description: "You have been logged out successfully",
+        });
+        // In a real app, we would handle actual logout logic here
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <header className="sticky top-0 z-30 w-full border-b bg-background/80 backdrop-blur-md">
@@ -83,10 +112,16 @@ const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleProfileAction('profile')}>
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleProfileAction('settings')}>
+                Settings
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Log out</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleProfileAction('logout')}>
+                Log out
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
