@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Customers from "./pages/Customers";
 import Companies from "./pages/Companies";
 import Pipeline from "./pages/Pipeline";
+import Analytics from "./pages/Analytics";
 import Integrations from "./pages/Integrations";
 import NotFound from "./pages/NotFound";
 
@@ -28,9 +29,10 @@ const App = () => (
             <Route path="customers" element={<Customers />} />
             <Route path="companies" element={<Companies />} />
             <Route path="pipeline" element={<Pipeline />} />
+            <Route path="analytics" element={<Analytics />} />
             <Route path="integrations" element={<Integrations />} />
           </Route>
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          {/* ADD All CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
