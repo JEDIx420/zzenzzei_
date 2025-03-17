@@ -33,9 +33,17 @@ const AppLayout = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
+      <Navbar 
+        toggleSidebar={toggleSidebar} 
+        closeSidebar={closeSidebar}
+        sidebarOpen={sidebarOpen} 
+      />
       <div className="flex flex-1">
         <Sidebar isOpen={sidebarOpen} />
         <main 
@@ -53,7 +61,7 @@ const AppLayout = () => {
       {sidebarOpen && isMobile && (
         <div 
           className="fixed inset-0 z-10 bg-black/50 md:hidden" 
-          onClick={toggleSidebar}
+          onClick={closeSidebar}
           aria-hidden="true"
         />
       )}

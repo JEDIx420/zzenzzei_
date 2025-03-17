@@ -16,10 +16,11 @@ import { useToast } from "@/hooks/use-toast";
 
 interface NavbarProps {
   toggleSidebar: () => void;
+  closeSidebar: () => void;
   sidebarOpen: boolean;
 }
 
-const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
+const Navbar = ({ toggleSidebar, closeSidebar, sidebarOpen }: NavbarProps) => {
   const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -57,8 +58,8 @@ const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={toggleSidebar}
-            aria-label="Toggle sidebar"
+            onClick={sidebarOpen ? closeSidebar : toggleSidebar}
+            aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
             className="mr-2"
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
