@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bell, Menu, Search, X } from "lucide-react";
@@ -16,11 +15,11 @@ import { useToast } from "@/hooks/use-toast";
 
 interface NavbarProps {
   toggleSidebar: () => void;
-  closeSidebar: () => void;
-  sidebarOpen: boolean;
+  sidebarState: string;
+  isMobile: boolean;
 }
 
-const Navbar = ({ toggleSidebar, closeSidebar, sidebarOpen }: NavbarProps) => {
+const Navbar = ({ toggleSidebar, sidebarState, isMobile }: NavbarProps) => {
   const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -51,6 +50,16 @@ const Navbar = ({ toggleSidebar, closeSidebar, sidebarOpen }: NavbarProps) => {
     }
   };
 
+  // Determine which icon to show based on sidebar state
+  const sidebarIcon = isMobile 
+    ? (sidebarState === "expanded" ? <X size={20} /> : <Menu size={20} />)
+    : (sidebarState === "expanded" ? <X size={20} /> : <Menu size={20} />);
+
+  // Determine the accessible label
+  const sidebarLabel = isMobile
+    ? (sidebarState === "expanded" ? "Close sidebar" : "Open sidebar")
+    : (sidebarState === "expanded" ? "Collapse sidebar" : "Expand sidebar");
+
   return (
     <header className="sticky top-0 z-30 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="flex h-16 items-center px-4 md:px-6">
@@ -58,11 +67,11 @@ const Navbar = ({ toggleSidebar, closeSidebar, sidebarOpen }: NavbarProps) => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={sidebarOpen ? closeSidebar : toggleSidebar}
-            aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+            onClick={toggleSidebar}
+            aria-label={sidebarLabel}
             className="mr-2"
           >
-            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            {sidebarIcon}
           </Button>
           <Link 
             to="/"
