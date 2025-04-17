@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -16,7 +17,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageHeader from "@/components/ui/PageHeader";
 import StatCard from "@/components/ui/StatCard";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import FileImport from "@/components/FileImport";
 
 const data = [
   { name: "Jan", value: 400 },
@@ -105,7 +105,6 @@ const Dashboard = () => {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="import">Import Data</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
         </TabsList>
@@ -254,39 +253,6 @@ const Dashboard = () => {
                       <ArrowUpRight className="ml-auto h-4 w-4" />
                     </Button>
                   </Link>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        <TabsContent value="import" className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <FileImport />
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Import Tips</CardTitle>
-                <CardDescription>
-                  Guidelines for successful data imports
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <h3 className="font-medium text-sm">Prepare Your File</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Ensure your CSV has headers that match our system fields: Name, Email, Phone, Company, etc.
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="font-medium text-sm">File Size Limitations</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Maximum file size is 10MB, with up to 5,000 records per import.
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <h3 className="font-medium text-sm">Data Validation</h3>
-                  <p className="text-sm text-muted-foreground">
-                    The system will validate emails and phone numbers. Invalid entries will be flagged.
-                  </p>
                 </div>
               </CardContent>
             </Card>

@@ -7,13 +7,15 @@ import {
   LayoutDashboard, 
   Link2, 
   Settings, 
-  Users
+  Users,
+  Upload
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import SidebarFileImport from "@/components/SidebarFileImport";
 
 interface SidebarProps {
   state: string;  // "expanded", "collapsed", or "closed"
@@ -108,6 +110,23 @@ const Sidebar = ({ state }: SidebarProps) => {
             </Link>
           ))}
         </nav>
+        
+        <Separator className="my-4 mx-2" />
+        
+        {/* File Import Section */}
+        {!isIconOnly && <SidebarFileImport />}
+        {isIconOnly && (
+          <div className="px-2 py-2 flex justify-center">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-10 w-10"
+              title="Import Data"
+            >
+              <Upload className="h-5 w-5 text-muted-foreground" />
+            </Button>
+          </div>
+        )}
         
         <Separator className="my-4 mx-2" />
         

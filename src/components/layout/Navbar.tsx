@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Bell, Menu, Search, X } from "lucide-react";
@@ -77,10 +78,12 @@ const Navbar = ({ toggleSidebar, sidebarState, isMobile }: NavbarProps) => {
             to="/"
             className="flex items-center gap-2 font-semibold text-lg md:text-xl transition-all hover:opacity-80"
           >
-            <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
-              <span className="text-white font-bold">CRM</span>
-            </div>
-            <span className="hidden md:inline-block animate-fade-in">SalesGarden</span>
+            <img 
+              src="/lovable-uploads/8c629d68-ca86-4919-97a6-ac1e6803d6ba.png" 
+              alt="zzenzzei logo" 
+              className="h-8 w-8"
+            />
+            <span className="hidden md:inline-block animate-fade-in">zzenzzei</span>
           </Link>
         </div>
 
