@@ -1,11 +1,13 @@
 
 import { useState } from "react";
-import { Link2, Zap, CheckCircle, AlertCircle, Book, ExternalLink } from "lucide-react";
+import { Link2, Zap, CheckCircle, AlertCircle, Book, ExternalLink, Webhook } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import PageHeader from "@/components/ui/PageHeader";
 import { toast } from "sonner";
 
@@ -71,7 +73,10 @@ const IntegrationCard = ({
 
 const Integrations = () => {
   const [n8nWebhookUrl, setN8nWebhookUrl] = useState("");
+  const [n8nTriggerEndpoint, setN8nTriggerEndpoint] = useState("https://your-crm-domain.com/api/n8n/webhook");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [autoEnrichment, setAutoEnrichment] = useState(false);
+  const [eventType, setEventType] = useState("lead.created");
 
   const handleConnectN8n = () => {
     if (!n8nWebhookUrl) {
@@ -88,11 +93,20 @@ const Integrations = () => {
     }, 1500);
   };
 
+  const handleTestWebhook = () => {
+    toast.info("Testing webhook...");
+    
+    // Simulate webhook test
+    setTimeout(() => {
+      toast.success("Webhook test successful! n8n received the test payload");
+    }, 2000);
+  };
+
   const availableIntegrations = [
     {
       title: "n8n",
       description: "Automate your workflow and connect with third-party services",
-      icon: <Zap className="h-6 w-6 text-primary" />,
+      icon: <Webhook className="h-6 w-6 text-primary" />,
       status: "pending" as const,
       onConnect: () => window.location.hash = "#webhook-setup",
     },
@@ -179,6 +193,73 @@ const Integrations = () => {
                     You can find this URL in your n8n workflow, in the webhook node.
                   </p>
                 </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="event-type">Event Type</Label>
+                  <Select
+                    value={eventType}
+                    onValueChange={setEventType}
+                  >
+                    <SelectTrigger id="event-type">
+                      <SelectValue placeholder="Select event type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Lead Events</SelectLabel>
+                        <SelectItem value="lead.created">Lead Created</SelectItem>
+                        <SelectItem value="lead.updated">Lead Updated</SelectItem>
+                        <SelectItem value="lead.converted">Lead Converted</SelectItem>
+                      </SelectGroup>
+                      <SelectGroup>
+                        <SelectLabel>Deal Events</SelectLabel>
+                        <SelectItem value="deal.created">Deal Created</SelectItem>
+                        <SelectItem value="deal.stage_changed">Deal Stage Changed</SelectItem>
+                        <SelectItem value="deal.closed_won">Deal Closed Won</SelectItem>
+                        <SelectItem value="deal.closed_lost">Deal Closed Lost</SelectItem>
+                      </SelectGroup>
+                      <SelectGroup>
+                        <SelectLabel>Contact Events</SelectLabel>
+                        <SelectItem value="contact.created">Contact Created</SelectItem>
+                        <SelectItem value="contact.email_added">Contact Email Added</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="auto-enrichment"
+                    checked={autoEnrichment}
+                    onCheckedChange={setAutoEnrichment}
+                  />
+                  <Label htmlFor="auto-enrichment">
+                    Enable auto data enrichment on new leads
+                  </Label>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="trigger-endpoint">Your CRM Webhook Endpoint</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="trigger-endpoint"
+                      value={n8nTriggerEndpoint}
+                      readOnly
+                      onClick={(e) => (e.target as HTMLInputElement).select()}
+                    />
+                    <Button 
+                      variant="outline" 
+                      onClick={() => {
+                        navigator.clipboard.writeText(n8nTriggerEndpoint);
+                        toast.success("Endpoint URL copied to clipboard");
+                      }}
+                    >
+                      Copy
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Use this URL as the target for your n8n HTTP Request node to send data back to the CRM.
+                  </p>
+                </div>
                 
                 <div className="flex items-center gap-2">
                   <Button
@@ -186,6 +267,13 @@ const Integrations = () => {
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? "Configuring..." : "Configure Webhook"}
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={handleTestWebhook}
+                    disabled={!n8nWebhookUrl || isSubmitting}
+                  >
+                    Test Webhook
                   </Button>
                   <Button variant="outline" className="gap-2" asChild>
                     <a href="https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.webhook/" target="_blank" rel="noreferrer">
@@ -204,7 +292,8 @@ const Integrations = () => {
                   <li>2. Copy the webhook URL from n8n and paste it here</li>
                   <li>3. Add nodes in n8n to connect to your third-party platforms</li>
                   <li>4. Configure the workflow to update your CRM when campaign status changes</li>
-                  <li>5. Activate your n8n workflow and test the integration</li>
+                  <li>5. Use the CRM Webhook Endpoint in your n8n workflow to send data back to the CRM</li>
+                  <li>6. Activate your n8n workflow and test the integration</li>
                 </ol>
               </div>
             </div>

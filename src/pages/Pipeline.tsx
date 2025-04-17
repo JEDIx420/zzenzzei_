@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { PlusCircle, BarChart3, Filter } from "lucide-react";
+import { PlusCircle, BarChart3, Filter, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -10,9 +9,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import PageHeader from "@/components/ui/PageHeader";
 import KanbanBoard, { KanbanItemType, KanbanColumnType } from "@/components/ui/KanbanBoard";
+import ResearchAgent from "@/components/ai/ResearchAgent";
 
 // Sample data for the pipeline
 const initialColumns: KanbanColumnType[] = [
@@ -146,24 +147,21 @@ const Pipeline = () => {
   const [items, setItems] = useState<KanbanItemType[]>(initialItems);
   const [priorityFilter, setPriorityFilter] = useState<string>("all");
   const [assigneeFilter, setAssigneeFilter] = useState<string>("all");
-
+  const [selectedItem, setSelectedItem] = useState<KanbanItemType | null>(null);
+  
   const handleChangeItemColumn = (itemId: string, columnId: string) => {
-    // Update the item's status
     setItems((prevItems) =>
       prevItems.map((item) =>
         item.id === itemId ? { ...item, status: columnId } : item
       )
     );
 
-    // Update column item ids
     setColumns((prevColumns) => {
-      // Remove item from any column that contains it
       const updatedColumns = prevColumns.map((column) => ({
         ...column,
         itemIds: column.itemIds.filter((id) => id !== itemId),
       }));
 
-      // Add item to the target column
       return updatedColumns.map((column) =>
         column.id === columnId
           ? { ...column, itemIds: [...column.itemIds, itemId] }
@@ -175,8 +173,14 @@ const Pipeline = () => {
   };
 
   const handleItemClick = (itemId: string) => {
-    toast.info(`Viewing deal ${itemId}`);
-    // In a real app, open a modal or navigate to deal details
+    const item = items.find(item => item.id === itemId);
+    if (item) {
+      setSelectedItem(item);
+    }
+  };
+
+  const handleResearchComplete = (result: any) => {
+    toast.success(`Research data added to ${result.companyName}`);
   };
 
   const filteredItems = items.filter((item) => {
@@ -193,10 +197,30 @@ const Pipeline = () => {
         title="Sales Pipeline" 
         description="Track and manage your deals through your sales stages."
       >
-        <Button>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add Deal
-        </Button>
+        <div className="flex gap-2">
+          <Button>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Deal
+          </Button>
+          
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <Search className="mr-2 h-4 w-4" />
+                Research Lead
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>AI Lead Research</DialogTitle>
+              </DialogHeader>
+              <ResearchAgent 
+                initialQuery={selectedItem?.title.split(" - ")[0] || ""} 
+                onResearchComplete={handleResearchComplete}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
       </PageHeader>
 
       <Tabs defaultValue="kanban" className="space-y-4">
@@ -273,6 +297,15 @@ const Pipeline = () => {
           </div>
         </TabsContent>
       </Tabs>
+      
+      <Dialog>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>AI Lead Research</DialogTitle>
+          </DialogHeader>
+          <ResearchAgent />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
